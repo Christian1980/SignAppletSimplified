@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <script>
+            // Invoked by the applet towards the end of its init
+            // Should be rewritten to use Java 7's onLoad http://docs.oracle.com/javase/tutorial/deployment/applet/appletStatus.html
+            function appletReady()
+            {
+		// Note: Chrome hangs on this alert. You can do other stuff, just not alert.
+                alert("ready");
+            }
+            
+            function inputfile()
+            {
+	       // Returns path+filename when successful, "" if not.
+	       alert(signapplet.selectInputFile());
+	    }
+	    
+	    function outputfile()
+	    {
+	       // Returns path+filename. You must have successfully called selectInputFile first.
+	       alert(signapplet.selectOutputFile());
+	    }
+	    
+            function cert(restart)
+            {
+	       // Returns the cert subject if successful, "" if not.
+	       alert(signapplet.selectNextCert(restart));
+	    }
+
+            function dosign(close)
+            {
+	       // You must have succesfully called selectInputFile, selectOutputFile and selectNextCert first.
+	       // Close = false allows you to sign again without having to select cert once more.
+	       // Returns true/false to indicate success.
+	       alert(signapplet.signDocument(close));
+	    }
+	    
+        </script>
+        <script src="https://www.java.com/js/deployJava.js"></script>
+    </head>
+    <body>
+        <script>
+    		// set java_status_events parameter to true 
+    		var attributes = { id:'signapplet',
+        		code:'Sign',
+        		archive: './target/SignApplet-4.2.0-jar-with-dependencies.jar',
+        		width:220, height:80} ;
+    			var parameters = {java_status_events: 'true', permissions:'sandbox' } ;
+    			deployJava.runApplet(attributes, parameters, '1.8');
+		</script>
+        
+        <p>
+	 <a href='#' onclick='inputfile()' >select input file</a><br>
+	 <a href='#' onclick='outputfile()' >select output file</a><br>
+	 <a href='#' onclick='cert(false)' >load next cert</a><br>
+	 <a href='#' onclick='cert(true)' >load first cert</a><br>
+	 <a href='#' onclick='dosign(true)' >sign (unload cert afterwards)</a><br>
+	 <a href='#' onclick='dosign(false)' >sign (keep cert active)</a>
+	 <!-- After signing, you can also use the applet's upload function -->
+        </p>
+    </body>
+</html>
